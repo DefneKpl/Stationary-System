@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="login-page">
+    <div class="login-card">
+
+        <div class="login-logo">
+            <div class="login-logo-circle">✦</div>
+            <p>SmartStationerySystem</p>
+        </div>
+
+        <h2>Giriş Yap</h2>
+        <p class="login-subtitle">
+            Kırtasiye sıra alma sistemine devam etmek için giriş yapın.
+        </p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.Error
+            </div>
+        }
+
+        <form asp-action="Login" method="post">
+
+            <div class="form-group mb-3">
+                <label>Mail</label>
+                <input type="email"
+                       name="email"
+                       class="form-control login-input"
+                       placeholder="Mail adresinizi giriniz"
+                       required />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Şifre</label>
+                <input type="password"
+                       name="password"
+                       class="form-control login-input"
+                       placeholder="Şifrenizi giriniz"
+                       required />
+            </div>
+
+            <button type="submit" class="login-btn">
+                Giriş Yap
+            </button>
+
+        </form>
+
+        <div class="login-hint">
+            Öğrenci ve kırtasiyeci kullanıcıları için giriş desteklenir.
+        </div>
+
+    </div>
+</div>

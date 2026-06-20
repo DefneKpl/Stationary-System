@@ -1,0 +1,68 @@
+@model SmartStationerySystem.Models.PrintOption
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>PrintOption</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-2">
+                <label asp-for="ColorType" class="control-label"></label>
+                <select asp-for="ColorType" class="form-control">
+                    <option value="">Seçiniz</option>
+                    <option value="Siyah-Beyaz">Siyah-Beyaz</option>
+                    <option value="Renkli">Renkli</option>
+                </select>
+                <span asp-validation-for="ColorType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-2">
+                <label asp-for="PaperSize" class="control-label"></label>
+                <select asp-for="PaperSize" class="form-control">
+                    <option value="">Seçiniz</option>
+                    <option value="A4">A4</option>
+                    <option value="A3">A3</option>
+                    <option value="A5">A5</option>
+                </select>
+                <span asp-validation-for="PaperSize" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-2">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsDoubleSided" />
+                    Arkalı Önlü
+                </label>
+            </div>
+
+            <div class="form-group mb-2">
+                <label asp-for="PricePerPage" class="control-label"></label>
+                <input asp-for="PricePerPage" class="form-control" />
+                <span asp-validation-for="PricePerPage" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="mt-2">
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

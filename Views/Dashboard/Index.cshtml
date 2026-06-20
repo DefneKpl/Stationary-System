@@ -1,0 +1,183 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="dashboard-page">
+
+    <h1 class="dashboard-title">Yönetim Paneli</h1>
+
+    <div class="dashboard-divider">
+        <span></span>
+        <small>❧</small>
+        <span></span>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card card-blush">
+            <div class="dashboard-icon"><i class="bi bi-clipboard-data"></i></div>
+            <div>
+                <h3>@ViewBag.TotalOrders</h3>
+                <p>Toplam Sipariş</p>
+            </div>
+        </div>
+
+        <div class="dashboard-card card-peach">
+            <div class="dashboard-icon"><i class="bi bi-hourglass-split"></i></div>
+            <div>
+                <h3>@ViewBag.WaitingOrders</h3>
+                <p>Bekleyen Sipariş</p>
+            </div>
+        </div>
+
+        <div class="dashboard-card card-blue">
+            <div class="dashboard-icon"><i class="bi bi-bell"></i></div>
+            <div>
+                <h3>@ViewBag.QueueOrders</h3>
+                <p>Kuyruktaki Sipariş</p>
+            </div>
+        </div>
+
+        <div class="dashboard-card card-sage">
+            <div class="dashboard-icon"><i class="bi bi-check-circle"></i></div>
+            <div>
+                <h3>@ViewBag.CompletedOrders</h3>
+                <p>Tamamlanan Sipariş</p>
+            </div>
+        </div>
+
+        <div class="dashboard-card card-lavender">
+            <div class="dashboard-icon"><i class="bi bi-wallet2"></i></div>
+            <div>
+                <h3>@ViewBag.TotalRevenue TL</h3>
+                <p>Toplam Gelir</p>
+            </div>
+        </div>
+
+        <div class="dashboard-card card-cream">
+            <div class="dashboard-icon"><i class="bi bi-people"></i></div>
+            <div>
+                <h3>@ViewBag.TotalCustomers</h3>
+                <p>Toplam Müşteri</p>
+            </div>
+        </div>
+
+        <div class="dashboard-card card-softblue">
+            <div class="dashboard-icon"><i class="bi bi-printer"></i></div>
+            <div>
+                <h3>@ViewBag.TotalPrintOptions</h3>
+                <p>Toplam Baskı Seçeneği</p>
+            </div>
+        </div>
+
+        <div class="dashboard-card card-rose">
+            <div class="dashboard-icon"><i class="bi bi-credit-card"></i></div>
+            <div>
+                <h3>@ViewBag.TotalPayments</h3>
+                <p>Toplam Ödeme</p>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="dashboard-line" />
+
+    <h3 class="section-title">Son 5 Sipariş</h3>
+
+    <table class="table dashboard-table mt-3">
+        <thead>
+            <tr>
+                <th>Müşteri</th>
+                <th>Baskı Seçeneği</th>
+                <th>Tutar</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var order in ViewBag.LastOrders)
+            {
+                <tr>
+                    <td>@order.Customer.FullName</td>
+                    <td>@order.PrintOption.ColorType - @order.PrintOption.PaperSize</td>
+                    <td>@order.TotalPrice TL</td>
+                    <td>
+                        @if (order.Status == "Tamamlandı")
+                        {
+                            <span class="status-pill status-completed">Tamamlandı</span>
+                        }
+                        else if (order.Status == "Beklemede")
+                        {
+                            <span class="status-pill status-waiting">Beklemede</span>
+                        }
+                        else if (order.Status == "Sırada")
+                        {
+                            <span class="status-pill status-queue">Sırada</span>
+                        }
+                        else
+                        {
+                            <span class="status-pill">@order.Status</span>
+                        }
+                    </td>
+                    <td>@order.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="dashboard-chart-card mt-5">
+        <h3 class="section-title">Sipariş Durumları</h3>
+
+        <div class="chart-wrapper">
+            <canvas id="orderStatusChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('orderStatusChart');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Bekleyen', 'Kuyrukta', 'Tamamlanan'],
+                datasets: [{
+                    data: [
+                        @ViewBag.WaitingOrders,
+                        @ViewBag.QueueOrders,
+                        @ViewBag.CompletedOrders
+                    ],
+                    backgroundColor: [
+                        '#F6EAD4',
+                        '#DCE7EE',
+                        '#DDE1D0'
+                    ],
+                    borderColor: '#FFFAF2',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '68%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#4f5144',
+                            font: {
+                                size: 14
+                            },
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

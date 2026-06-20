@@ -1,0 +1,80 @@
+@model SmartStationerySystem.Models.Order
+
+@{
+    ViewData["Title"] = "Sipariş Detayı";
+}
+
+<h1>Sipariş Detayı</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Müşteri</dt>
+        <dd class="col-sm-9">@(Model.Customer?.FullName ?? "-")</dd>
+
+        <dt class="col-sm-3">Telefon</dt>
+        <dd class="col-sm-9">@(Model.Customer?.PhoneNumber ?? "-")</dd>
+
+        <dt class="col-sm-3">Baskı Seçeneği</dt>
+        <dd class="col-sm-9">
+            @(Model.PrintOption != null
+                ? $"{Model.PrintOption.ColorType} - {Model.PrintOption.PaperSize} - {(Model.PrintOption.IsDoubleSided ? "Arkalı Önlü" : "Tek Yüz")}"
+                : "-")
+        </dd>
+
+        <dt class="col-sm-3">Sayfa Sayısı</dt>
+        <dd class="col-sm-9">@Model.PageCount</dd>
+
+        <dt class="col-sm-3">Kopya Sayısı</dt>
+        <dd class="col-sm-9">@Model.CopyCount</dd>
+
+        <dt class="col-sm-3">Toplam Fiyat</dt>
+        <dd class="col-sm-9">@Model.TotalPrice TL</dd>
+
+        <dt class="col-sm-3">Sipariş Durumu</dt>
+        <dd class="col-sm-9">@Model.Status</dd>
+
+        <dt class="col-sm-3">Oluşturulma Tarihi</dt>
+        <dd class="col-sm-9">@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</dd>
+    </dl>
+
+            <dt class="col-sm-3">Yüklenen Dosya</dt>
+        <dd class="col-sm-9">
+            @if (Model.UploadedFile != null)
+            {
+                <div>
+                    <strong>@Model.UploadedFile.FileName</strong>
+                </div>
+
+                <a href="@Model.UploadedFile.FilePath"
+                target="_blank"
+                class="btn btn-sm btn-info mt-2">
+                    Dosyayı Görüntüle
+                </a>
+
+                <a href="@Model.UploadedFile.FilePath"
+                download
+                class="btn btn-sm btn-success mt-2">
+                    Dosyayı İndir
+                </a>
+
+                <a href="@Model.UploadedFile.FilePath"
+                target="_blank"
+                onclick="setTimeout(() => window.open('@Model.UploadedFile.FilePath', '_blank'), 100);"
+                class="btn btn-sm btn-primary mt-2">
+                    Yazdır
+                </a>
+            }
+            else
+            {
+                <span class="text-muted">Dosya yüklenmemiş.</span>
+            }
+        </dd>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Düzenle</a>
+    <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+</div>

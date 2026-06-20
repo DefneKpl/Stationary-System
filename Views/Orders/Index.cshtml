@@ -1,0 +1,156 @@
+@model IEnumerable<SmartStationerySystem.Models.Order>
+
+@{
+    ViewData["Title"] = "Siparişler";
+}
+
+<h1>Siparişler</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Sipariş Oluştur</a>
+</p>
+
+<form asp-action="Index" method="get" class="row mb-3">
+
+    <div class="col-md-4">
+        <input type="text"
+               name="searchString"
+               value="@ViewBag.SearchString"
+               class="form-control"
+               placeholder="Müşteri adına göre ara..." />
+    </div>
+
+    <div class="col-md-3">
+        <select name="statusFilter" class="form-control">
+            <option value="">Tüm Durumlar</option>
+
+            @if (ViewBag.StatusFilter == "Beklemede")
+            {
+                <option value="Beklemede" selected>Beklemede</option>
+            }
+            else
+            {
+                <option value="Beklemede">Beklemede</option>
+            }
+
+            @if (ViewBag.StatusFilter == "Sırada")
+            {
+                <option value="Sırada" selected>Sırada</option>
+            }
+            else
+            {
+                <option value="Sırada">Sırada</option>
+            }
+
+            @if (ViewBag.StatusFilter == "Hazırlanıyor")
+            {
+                <option value="Hazırlanıyor" selected>Hazırlanıyor</option>
+            }
+            else
+            {
+                <option value="Hazırlanıyor">Hazırlanıyor</option>
+            }
+
+            @if (ViewBag.StatusFilter == "Tamamlandı")
+            {
+                <option value="Tamamlandı" selected>Tamamlandı</option>
+            }
+            else
+            {
+                <option value="Tamamlandı">Tamamlandı</option>
+            }
+
+            @if (ViewBag.StatusFilter == "İptal Edildi")
+            {
+                <option value="İptal Edildi" selected>İptal Edildi</option>
+            }
+            else
+            {
+                <option value="İptal Edildi">İptal Edildi</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-success">Filtrele</button>
+        <a asp-action="Index" class="btn btn-secondary">Temizle</a>
+    </div>
+
+</form>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Müşteri</th>
+            <th>Baskı Seçeneği</th>
+            <th>Sayfa Sayısı</th>
+            <th>Kopya Sayısı</th>
+            <th>Toplam Fiyat</th>
+            <th>Durum</th>
+            <th>Oluşturulma Tarihi</th>
+            <th>İşlemler</th>
+            <th>Durum Güncelle</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(item.Customer?.FullName ?? "-")</td>
+
+                <td>
+                    @(item.PrintOption != null
+                        ? $"{item.PrintOption.ColorType} - {item.PrintOption.PaperSize} - {(item.PrintOption.IsDoubleSided ? "Arkalı Önlü" : "Tek Yüz")}"
+                        : "-")
+                </td>
+
+                <td>@item.PageCount</td>
+                <td>@item.CopyCount</td>
+                <td>@item.TotalPrice TL</td>
+
+                <td>
+                    @if (item.Status == "Beklemede")
+                    {
+                        <span class="badge bg-secondary">Beklemede</span>
+                    }
+                    else if (item.Status == "Sırada")
+                    {
+                        <span class="badge bg-warning text-dark">Sırada</span>
+                    }
+                    else if (item.Status == "Hazırlanıyor")
+                    {
+                        <span class="badge bg-primary">Hazırlanıyor</span>
+                    }
+                    else if (item.Status == "Tamamlandı")
+                    {
+                        <span class="badge bg-success">Tamamlandı</span>
+                    }
+                    else if (item.Status == "İptal Edildi")
+                    {
+                        <span class="badge bg-danger">İptal Edildi</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-light text-dark">@item.Status</span>
+                    }
+                </td>
+
+                <td>@item.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning mb-1">Düzenle</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info mb-1">Detay</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger mb-1">Sil</a>
+                </td>
+
+                <td>
+                    <a asp-action="UpdateStatus" asp-route-id="@item.Id" asp-route-status="Sırada" class="btn btn-sm btn-secondary mb-1">Sıraya Al</a>
+                    <a asp-action="UpdateStatus" asp-route-id="@item.Id" asp-route-status="Hazırlanıyor" class="btn btn-sm btn-primary mb-1">Hazırlanıyor</a>
+                    <a asp-action="UpdateStatus" asp-route-id="@item.Id" asp-route-status="Tamamlandı" class="btn btn-sm btn-success mb-1">Tamamlandı</a>
+                    <a asp-action="UpdateStatus" asp-route-id="@item.Id" asp-route-status="İptal Edildi" class="btn btn-sm btn-danger mb-1">İptal</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

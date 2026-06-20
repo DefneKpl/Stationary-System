@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SmartStationerySystem</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SmartStationerySystem.styles.css" asp-append-version="true" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+    @{
+        var userRole = Context.Session.GetString("UserRole");
+        var userName = Context.Session.GetString("UserName");
+    }
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+
+                <a class="navbar-brand brand-logo"
+                asp-controller="Home"
+                asp-action="Index">
+
+                    <span class="brand-icon">✦</span>
+
+                    <div class="brand-text">
+                        <span class="brand-title">
+                            Kırtasiye Sıra Sistemi
+                        </span>
+                        <span class="brand-subtitle">
+                            Beykent Üniversitesi
+                        </span>
+                    </div>
+
+                </a>
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarContent"
+                        aria-controls="navbarContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+
+                    <ul class="navbar-nav me-auto">
+
+                        @if (userRole == "Stationer")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Customers" asp-action="Index">Customers</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="PrintOptions" asp-action="Index">Print Options</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Orders" asp-action="Index">Orders</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Payments" asp-action="Index">Payments</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="QueueItems" asp-action="Index">Queue</a>
+                            </li>
+                        }
+                        else if (userRole == "Student")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Orders" asp-action="Index">Siparişlerim</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Orders" asp-action="Create">Yeni Sipariş</a>
+                            </li>
+                        }
+
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto">
+                        @if (userRole != null)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link text-muted">@userName</span>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">
+                                    Çıkış Yap
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    Giriş Yap
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted mt-4">
+        <div class="container">
+            &copy; 2026 - SmartStationerySystem
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
